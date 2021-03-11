@@ -3,6 +3,9 @@
 > python nrnGenerator.py
 > 
 > 90101032178
+## Generator with amount
+> python nrnGenerator.py --amount 10 --dest ./output.txt
+> 
 
 
 ## Validator

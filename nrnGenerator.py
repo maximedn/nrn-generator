@@ -1,11 +1,14 @@
 import datetime
 import random
 import argparse
+import os
 
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Generates random NRN.')
     parser.add_argument('--check', dest='nrn', help='Check if an NRN is valid.')
+    parser.add_argument('--amount', dest='amount', help='The amount of nrns to be generated.')
+    parser.add_argument('--dest', dest='dest', help='The file where to store the generated nrns.')
     return parser.parse_args()
 
 
@@ -63,5 +66,13 @@ if __name__ == '__main__':
         else:
             print(f'{arguments.nrn} is not valid.')
     else:
-        valid_nrn = generate_valid_nrn()
-        print(valid_nrn)
+        if arguments.dest is not None and arguments.amount is not None:
+            os.remove(arguments.dest)
+            file = open(arguments.dest, 'x')
+            for i in range(0, int(arguments.amount)):
+                valid_nrn = generate_valid_nrn()
+                file.write(f'{valid_nrn}\n')
+            file.close()
+        else:
+            valid_nrn = generate_valid_nrn()
+            print(valid_nrn)
