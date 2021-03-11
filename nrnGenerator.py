@@ -7,6 +7,16 @@ import os
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Generates random NRN.')
     parser.add_argument('--check', dest='nrn', help='Check if an NRN is valid.')
+    parser.add_argument('--checkFile', dest='file', help='''
+    Check if a list of NRNs is valid in a file.
+    
+    Format:
+    XXXXXXXXX
+    XXXXXXXXX
+    XXXXXXXXX
+    ...
+    XXXXXXXXX
+    ''')
     parser.add_argument('--amount', dest='amount', help='The amount of nrns to be generated.')
     parser.add_argument('--dest', dest='dest', help='The file where to store the generated nrns.')
     return parser.parse_args()
@@ -74,5 +84,14 @@ if __name__ == '__main__':
                 file.write(f'{valid_nrn}\n')
             file.close()
         else:
-            valid_nrn = generate_valid_nrn()
-            print(valid_nrn)
+            if arguments.file is not None:
+                file = open(arguments.file, 'r')
+                lines = file.readlines()
+                lines_ = {nrn.strip(): check_nrn(nrn.strip().replace('\'', '').replace('\"', '')) for nrn in lines}
+                results = open(f'{arguments.file}-results.txt', 'x')
+                invalid_nrns = [nrn for nrn in lines_.keys() if not lines_[nrn]]
+                results.writelines(invalid_nrns)
+                results.close()
+            else:
+                valid_nrn = generate_valid_nrn()
+                print(valid_nrn)
